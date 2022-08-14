@@ -151,8 +151,14 @@ description: >
 }
 
 func hasHugoHeader(content *string) bool {
-	if strings.Contains(*content, "categories:") && strings.Contains(*content, "tags:") &&
-		strings.Contains(*content, "title:") {
+	ss := strings.Split(*content,"\n")
+	preLen := 5
+	if len(ss) < preLen {
+		preLen = len(ss)
+	}
+	lines := strings.Join(ss[:preLen], "\n")
+	if strings.Contains(lines, "categories:") && strings.Contains(lines, "tags:") &&
+		strings.Contains(lines, "title:") {
 		return true
 	}
 	return false
