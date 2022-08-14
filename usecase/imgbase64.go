@@ -75,6 +75,7 @@ func ParseImgBase64File(path string, chapter string, rewrite bool) error {
 	if newContent == "" {
 		return nil
 	}
+	HandleHugoHeader(&newContent, path)
 	newPath := path
 	if !rewrite {
 		newPath = strings.Replace(path, ".md", "_01.md", 1)
@@ -125,6 +126,36 @@ func ParseImgBase64Content(path, content string, chapter string) (string, error)
 	// slog.Debugf("c=%s\n", newContent)
 	showImgFilePath(imgFilePaths)
 	return newContent, nil
+}
+
+func HandleHugoHeader(content *string, path string) {
+	if !hasHugoHeader(content) {
+		base := filepath.Base(path)
+		ext := filepath.Ext(path)
+		filename := strings.TrimSuffix(base, ext)
+		template := `
+---
+categories: [""]
+tags: [""]
+title: "%s"
+# linkTitle: ""
+weight: 10
+description: >
+
+---
+
+`
+		header := fmt.Sprintf(template, filename)
+		*content = header + *content
+	}
+}
+
+func hasHugoHeader(content *string) bool {
+	if strings.Contains(*content, "categories:") && strings.Contains(*content, "tags:") &&
+		strings.Contains(*content, "title:") {
+		return true
+	}
+	return false
 }
 
 func ParseImgBase64Dir(args *ImgBase64Args) {
