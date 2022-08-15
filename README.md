@@ -1,9 +1,16 @@
 # Overview
 util-cli is a util that can transform markdown'binary to file's image
 
-# installation
+# Installation
+## Download package
+firstly download and unpack the release package then execute the script
 ```shell script
 sudo bash install.sh
+```
+
+## shell
+```shell script
+curl -s https://raw.githubusercontent.com/chnherb/util-cli/master/install-release.sh | sudo bash -s -- -r chnherb/util-cli 
 ```
 
 # Usage
