@@ -32,3 +32,16 @@ e.g.
 util-cli imgbase64 replace -h
 util-cli imgbase64 replace --chapter=skywalking211211 --rewrite false
 ```
+
+## collapse
+collapse code
+```shell script
+util-cli collapse -h
+util-cli collapse --src=/Users/bo/hugo-blog/my-blog/content/cn -v
+```
+
+# Run
+```shell script
+go run main.go imgbase64 replace --src=/Users/bo/hugo-blog/my-blog/content/cn --chapter=test -v
+go run main.go collapse --src=/Users/bo/hugo-blog/my-blog/content/cn -v
+```

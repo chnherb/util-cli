@@ -73,7 +73,7 @@ func ParseImgBase64File(path string, chapter string, rewrite bool) error {
 	if err != nil {
 		return err
 	}
-	if newContent == "" && hasHugoHeader(&content){
+	if newContent == "" && hasHugoHeader(&content) {
 		return nil
 	}
 	if newContent == "" {
@@ -154,13 +154,13 @@ description: >
 }
 
 func hasHugoHeader(content *string) bool {
-	ss := strings.Split(*content,"\n")
+	ss := strings.Split(*content, "\n")
 	preLen := 5
 	if len(ss) < preLen {
 		preLen = len(ss)
 	}
 	lines := strings.Join(ss[:preLen], "\n")
-	if strings.Contains(lines, "---")  && strings.Contains(lines, "title:") {
+	if strings.Contains(lines, "---") && strings.Contains(lines, "title:") {
 		return true
 	}
 	return false
