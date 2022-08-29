@@ -64,16 +64,20 @@ func ParseImgBase64File(path string, chapter string, rewrite bool) error {
 	if !utils.ExistFile(path) {
 		return fmt.Errorf("there is no file in %s", path)
 	}
-	content, err := ioutil.ReadFile(path)
+	contentByte, err := ioutil.ReadFile(path)
+	content := string(contentByte)
 	if err != nil {
 		return err
 	}
-	newContent, err := ParseImgBase64Content(path, string(content), chapter)
+	newContent, err := ParseImgBase64Content(path, content, chapter)
 	if err != nil {
 		return err
+	}
+	if newContent == "" && hasHugoHeader(&content){
+		return nil
 	}
 	if newContent == "" {
-		return nil
+		newContent = content
 	}
 	HandleHugoHeader(&newContent, path)
 	newPath := path
@@ -133,8 +137,7 @@ func HandleHugoHeader(content *string, path string) {
 		base := filepath.Base(path)
 		ext := filepath.Ext(path)
 		filename := strings.TrimSuffix(base, ext)
-		template := `
----
+		template := `---
 categories: [""]
 tags: [""]
 title: "%s"
@@ -157,8 +160,7 @@ func hasHugoHeader(content *string) bool {
 		preLen = len(ss)
 	}
 	lines := strings.Join(ss[:preLen], "\n")
-	if strings.Contains(lines, "categories:") && strings.Contains(lines, "tags:") &&
-		strings.Contains(lines, "title:") {
+	if strings.Contains(lines, "---")  && strings.Contains(lines, "title:") {
 		return true
 	}
 	return false
