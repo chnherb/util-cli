@@ -10,11 +10,12 @@ import (
 )
 
 const (
-	CODE_LINE_LIMIT        = 20
-	CODE_COLLAPSE_TITILE   = "Expand/Collapse Code Block"
-	CODE_IDENTIFIER        = "```"
-	CODE_COLLAPSE_TEMPLATE = "{{%% code ctitle=\"%s\" %%}}\n%s%s%s\n{{%% /code %%}}\n\n" // %% 转义成 %（不是\\%）
-	LINE_IDENTIFIER        = "\n"
+	CODE_LINE_LIMIT         = 20
+	CODE_COLLAPSE_TITILE    = "Expand/Collapse Code Block"
+	CODE_IDENTIFIER         = "```"
+	CODE_COLLAPSE_TEMPLATE  = "{{%% code ctitle=\"%s\" %%}}\n%s%s%s\n{{%% /code %%}}\n\n" // %% 转义成 %（不是\\%）
+	CODE_COLLAPSE_TEMPLATE1 = "{{%% code1 %%}}\n%s%s%s\n{{%% /code1 %%}}\n\n"             // %% 转义成 %（不是\\%）
+	LINE_IDENTIFIER         = "\n"
 )
 
 var (
@@ -106,6 +107,9 @@ func CollapseCodeWithLine(content *string, codeLineLimit int, needTitle bool) bo
 			if strings.Count(curCode, LINE_IDENTIFIER) >= codeLineLimit {
 				collapseTitle := parseCollapseTitle(curCode, needTitle)
 				newContent += fmt.Sprintf(CODE_COLLAPSE_TEMPLATE, collapseTitle, CODE_IDENTIFIER, curCode, CODE_IDENTIFIER)
+				matchCode = true
+			} else {
+				newContent += fmt.Sprintf(CODE_COLLAPSE_TEMPLATE1, CODE_IDENTIFIER, curCode, CODE_IDENTIFIER)
 				matchCode = true
 			}
 		}
