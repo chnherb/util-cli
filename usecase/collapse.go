@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"util-cli/consts"
 	"util-cli/utils"
 )
 
@@ -15,7 +16,6 @@ const (
 	CODE_IDENTIFIER         = "```"
 	CODE_COLLAPSE_TEMPLATE  = "{{%% code ctitle=\"%s\" %%}}\n%s%s%s\n{{%% /code %%}}\n\n" // %% 转义成 %（不是\\%）
 	CODE_COLLAPSE_TEMPLATE1 = "{{%% code1 %%}}\n%s%s%s\n{{%% /code1 %%}}\n\n"             // %% 转义成 %（不是\\%）
-	LINE_IDENTIFIER         = "\n"
 )
 
 var (
@@ -104,7 +104,7 @@ func CollapseCodeWithLine(content *string, codeLineLimit int, needTitle bool) bo
 		curCode := ss[idx]
 		matchCode = false // reset
 		if hasMDLang(curCode) && !hasMDLang(ss[idx+1]) {
-			if strings.Count(curCode, LINE_IDENTIFIER) >= codeLineLimit {
+			if strings.Count(curCode, consts.LINE_IDENTIFIER) >= codeLineLimit {
 				collapseTitle := parseCollapseTitle(curCode, needTitle)
 				newContent += fmt.Sprintf(CODE_COLLAPSE_TEMPLATE, collapseTitle, CODE_IDENTIFIER, curCode, CODE_IDENTIFIER)
 				matchCode = true
@@ -162,7 +162,7 @@ func parseCollapseTitle(code string, needTitle bool) string {
 		langType = "go"
 	}
 	if keys, ok := funcKeymap[langType]; ok {
-		ss := strings.Split(code, LINE_IDENTIFIER)
+		ss := strings.Split(code, consts.LINE_IDENTIFIER)
 		lineCount := 5
 		for i := 1; i <= lineCount; i++ {
 			if i >= len(ss) {

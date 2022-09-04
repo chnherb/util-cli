@@ -35,6 +35,7 @@ func newCommand() *cobra.Command {
 	rootCmd := newRootCmd()
 	rootCmd.AddCommand(newImgBase64Command())
 	rootCmd.AddCommand(newCollapseCommand())
+	rootCmd.AddCommand(newQuoteCommand())
 	return rootCmd
 }
 

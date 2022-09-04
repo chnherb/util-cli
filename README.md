@@ -40,8 +40,16 @@ util-cli collapse -h
 util-cli collapse --src=/Users/bo/hugo-blog/my-blog/content/cn -v
 ```
 
+## quote
+when next line has pic, append blank line
+```shell script
+util-cli quote -h
+util-cli quote --src=/Users/bo/hugo-blog/my-blog/content/cn -v
+```
+
 # Run
 ```shell script
 go run main.go imgbase64 replace --src=/Users/bo/hugo-blog/my-blog/content/cn --chapter=test -v
 go run main.go collapse --src=/Users/bo/hugo-blog/my-blog/content/cn -v
+go run main.go quote --src=/Users/bo/hugo-blog/my-blog/content/cn -v
 ```

@@ -12,7 +12,7 @@ func newCollapseCommand() *cobra.Command {
 		Use:   "collapse",
 		Short: "exec collapse code command",
 		RunE: func(c *cobra.Command, _ []string) error {
-			slog.Infof("Try \"%s [command] --help\" for more options", "util-cli code")
+			slog.Infof("Try \"%s [command] --help\" for more options", "util-cli collapse")
 			return usecase.BatchCollapseCode(&args)
 		},
 	}

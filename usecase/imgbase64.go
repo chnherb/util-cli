@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 	_ "strings"
+	"util-cli/consts"
 	"util-cli/utils"
 
 	"github.com/gookit/slog"
@@ -121,12 +122,18 @@ func ParseImgBase64Content(path, content string, chapter string) (string, error)
 			fmt.Errorf("SaveImg ERR, i: %d", i)
 		}
 		imgFilePaths = append(imgFilePaths, imgFilePath)
-		newContent += content[preIndex:index[0]]
+		preContent := content[preIndex:index[0]]
+		newContent += preContent
+		if CheckQuoteInLastLine(preContent) {
+			newContent += consts.LINE_IDENTIFIER
+		}
 		newContent += fmt.Sprintf("![%s](%s)", filepath.Base(imgFilePath), imgFilePath)
 		// slog.Debugf("c=%s\n", newContent)
 		preIndex = index[1]
 	}
-	newContent += content[preIndex:]
+	if preIndex < len(content) {
+		newContent += content[preIndex:]
+	}
 	// slog.Debugf("c=%s\n", newContent)
 	showImgFilePath(imgFilePaths)
 	return newContent, nil
