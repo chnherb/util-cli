@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"strings"
 	_ "strings"
-	"util-cli/consts"
 	"util-cli/utils"
 
 	"github.com/gookit/slog"
@@ -70,22 +69,19 @@ func ParseImgBase64File(path string, chapter string, rewrite bool) error {
 	if err != nil {
 		return err
 	}
-	newContent, err := ParseImgBase64Content(path, content, chapter)
+	parseImgFlag, err := ParseImgBase64Content(path, &content, chapter)
 	if err != nil {
 		return err
 	}
-	if newContent == "" && hasHugoHeader(&content) {
+	if HandleAllQuote(&content) == false && parseImgFlag == false && hasHugoHeader(&content) {
 		return nil
 	}
-	if newContent == "" {
-		newContent = content
-	}
-	HandleHugoHeader(&newContent, path)
+	HandleHugoHeader(&content, path)
 	newPath := path
 	if !rewrite {
 		newPath = strings.Replace(path, ".md", "_01.md", 1)
 	}
-	err = ioutil.WriteFile(newPath, []byte(newContent), 0666)
+	err = ioutil.WriteFile(newPath, []byte(content), 0666)
 	if err != nil {
 		return err
 	}
@@ -93,50 +89,53 @@ func ParseImgBase64File(path string, chapter string, rewrite bool) error {
 	return nil
 }
 
-func ParseImgBase64Content(path, content string, chapter string) (string, error) {
+func ParseImgBase64Content(path string, content *string, chapter string) (bool, error) {
 	// chapter := "git_operation"
 	imgReStr := `\!\[图片\]\(data:image.*?\)`
-	b, err := regexp.MatchString(imgReStr, content)
+	b, err := regexp.MatchString(imgReStr, *content)
 	if !b || err != nil {
-		return "", err
+		return false, err
 	}
 	regexp, err := regexp.Compile(imgReStr)
 	if err != nil {
 		fmt.Println(err.Error())
-		return "", err
+		return false, err
 	}
 	// ss := regexp.FindAllString(content, -1)
 	// fmt.Println(ss)
-	indexs := regexp.FindAllIndex([]byte(content), -1)
+	indexs := regexp.FindAllIndex([]byte(*content), -1)
 	newContent := ""
 	preIndex := 0
 	if len(indexs) == 0 {
-		return "", nil
+		return false, nil
 	}
+	result := false
 	imgFilePaths := []string{}
 	for i, index := range indexs {
 		// fmt.Println(fmt.Sprintf("%d, %d", index[0], index[1]))
-		base64ImgContent := content[index[0]:index[1]]
+		base64ImgContent := (*content)[index[0]:index[1]]
 		imgFilePath, err := SaveImg(filepath.Dir(path), chapter, i, base64ImgContent)
 		if err != nil {
 			fmt.Errorf("SaveImg ERR, i: %d", i)
 		}
 		imgFilePaths = append(imgFilePaths, imgFilePath)
-		preContent := content[preIndex:index[0]]
+		preContent := (*content)[preIndex:index[0]]
 		newContent += preContent
-		if CheckQuoteInLastLine(preContent) {
-			newContent += consts.LINE_IDENTIFIER
-		}
+		//if CheckQuoteInLastLine(preContent) {
+		//	newContent += consts.LINE_IDENTIFIER
+		//}
 		newContent += fmt.Sprintf("![%s](%s)", filepath.Base(imgFilePath), imgFilePath)
 		// slog.Debugf("c=%s\n", newContent)
 		preIndex = index[1]
+		result = true
 	}
-	if preIndex < len(content) {
-		newContent += content[preIndex:]
+	if preIndex < len(*content) {
+		newContent += (*content)[preIndex:]
 	}
 	// slog.Debugf("c=%s\n", newContent)
 	showImgFilePath(imgFilePaths)
-	return newContent, nil
+	*content = newContent
+	return result, nil
 }
 
 func HandleHugoHeader(content *string, path string) {

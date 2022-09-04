@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"testing"
+	"util-cli/consts"
 )
 
 func Test_HandleAllQuoteBeforePic(t *testing.T) {
@@ -13,6 +15,12 @@ func Test_HandleAllQuoteBeforePic(t *testing.T) {
 		log.Fatal(err)
 	}
 	c := string(content)
-	HandleAllQuoteBeforePic(&c)
+	HandleAllQuote(&c)
 	fmt.Println(c)
+}
+
+func Test_QuoteTable(t *testing.T) {
+	s := "|参数|解释|"
+	flag := strings.HasPrefix(s, consts.QUOTE_IDENTIFIER)
+	fmt.Println(flag)
 }

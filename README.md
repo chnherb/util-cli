@@ -30,7 +30,8 @@ replace image of base64 encoding to file's image
 e.g.
 ```shell script
 util-cli imgbase64 replace -h
-util-cli imgbase64 replace --chapter=skywalking211211 --rewrite false
+util-cli imgbase64 replace --chapter=skywalking211211 --rewrite=false
+util-cli imgbase64 replace --src=/Users/bo/hugo-blog/my-blog/content/cn --chapter=test --rewrite=false
 ```
 
 ## collapse

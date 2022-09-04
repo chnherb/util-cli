@@ -50,7 +50,7 @@ func QuoteFile(args *QuoteArgs, subPath string) error {
 	if err != nil {
 		return err
 	}
-	if !HandleAllQuoteBeforePic(&content) {
+	if !HandleAllQuote(&content) {
 		return nil
 	}
 	err = ioutil.WriteFile(path, []byte(content), 0666)
@@ -72,7 +72,7 @@ func checkQuoteArgs(args *QuoteArgs) error {
 	return nil
 }
 
-// check > Before the image on a line
+// check > Before the image in a line
 func CheckQuoteInLastLine(preContent string) bool {
 	if len(preContent) <= 0 {
 		return false
@@ -126,6 +126,27 @@ func HandleAllQuoteBeforePic(content *string) bool {
 	}
 	if preIndex < len(*content) {
 		newContent += (*content)[preIndex:]
+	}
+	*content = newContent
+	return result
+}
+
+func HandleAllQuote(content *string) bool {
+	ss := strings.Split(*content, consts.LINE_IDENTIFIER)
+	if len(ss) < 2 {
+		return false
+	}
+	result := false
+	newContent := ss[0]
+	for i := 1; i < len(ss); i++ {
+		fmt.Println(ss[i])
+		if strings.HasPrefix(ss[i-1], consts.QUOTE_IDENTIFIER) &&
+			strings.TrimSpace(ss[i]) != consts.BLANK_IDENTIFIER &&
+			!strings.HasPrefix(ss[i], consts.QUOTE_IDENTIFIER) {
+			newContent += consts.LINE_IDENTIFIER
+			result = true
+		}
+		newContent += consts.LINE_IDENTIFIER + ss[i]
 	}
 	*content = newContent
 	return result
