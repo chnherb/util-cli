@@ -21,7 +21,7 @@ const (
 var (
 	// https://www.jianshu.com/p/1f223eb78ad8
 	MD_LANGs = []string{"text", "plain", "shell", "bash", "json", "yaml", "yml", "xml", "xhtml", "html",
-		"java", "go", "py", "python", "cpp", "c#", "c-sharp", "scala", "objc", "obj-c", "swift", "pl", "perl",
+		"java", "go", "py", "python", "cpp", "c++", "c#", "c-sharp", "scala", "objc", "obj-c", "swift", "pl", "perl",
 		"sql",
 		"css", "js", "jscript", "javascript", "php"}
 )
