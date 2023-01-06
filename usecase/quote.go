@@ -139,7 +139,6 @@ func HandleAllQuote(content *string) bool {
 	result := false
 	newContent := ss[0]
 	for i := 1; i < len(ss); i++ {
-		fmt.Println(ss[i])
 		if strings.HasPrefix(ss[i-1], consts.QUOTE_IDENTIFIER) &&
 			strings.TrimSpace(ss[i]) != consts.BLANK_IDENTIFIER &&
 			!strings.HasPrefix(ss[i], consts.QUOTE_IDENTIFIER) {
